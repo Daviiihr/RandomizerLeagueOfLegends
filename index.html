@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LOL Machine – Randomizer</title>
+  <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+  <main class="layout">
+    <!-- IZQUIERDA: Máquina -->
+    <section class="left">
+      <div class="machine" id="machine" aria-label="LOL Machine">
+        <img class="layer base"  src="img/Maquina.png" alt="LOL Machine" />
+        <img class="layer lever" src="img/Palanca.png" alt="Palanca" />
+        <img class="layer knob"  src="img/Pelota.png"  alt="Pelota de la palanca" />
+
+        <button class="hit-area" id="hit" aria-label="Tirar de la palanca" title="Tira de la palanca"></button>
+        <div class="tip">Click o tecla <b>R</b> para tirar</div>
+      </div>
+
+      <div class="btns">
+        <button id="btnSpin">Girar</button>
+        <button id="btnTeam">Equipo ×5</button>
+        <button id="btnReset">Reset</button>
+      </div>
+    </section>
+
+    <!-- DERECHA: Panel de control / resultados -->
+    <section class="right">
+      <div class="card">
+        <h2>Lista de invocadores</h2>
+        <p class="muted">Escribe uno por línea. Si está vacío, se autogeneran (<em>Invocador 1…</em>).</p>
+        <textarea id="summonersInput" rows="8" placeholder="Ejemplo:
+David
+AatroxMain
+Luxito"></textarea>
+        <div class="row gap">
+          <label class="switch">
+            <input id="reuseNames" type="checkbox" checked>
+            <span></span>
+          </label>
+          <span>Permitir repetir invocadores</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Resultado actual</h2>
+        <div class="result">
+          <img id="champImg" src="" alt="Campeón" />
+          <div class="result-info">
+            <div><b>Invocador:</b> <span id="resSummoner">—</span></div>
+            <div><b>Rol:</b> <span id="resRole">—</span></div>
+            <div><b>Campeón:</b> <span id="resChamp">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Equipo formado</h2>
+        <ol id="teamList" class="team-list"></ol>
+        <div class="row gap wrap">
+          <button id="btnCopyTeam" class="ghost">Copiar equipo</button>
+          <button id="btnClearTeam" class="ghost">Limpiar equipo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="JS/main.js"></script>
+</body>
+</html>
