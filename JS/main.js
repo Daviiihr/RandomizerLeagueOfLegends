@@ -34,40 +34,29 @@ function ms(varName){
   if (v.endsWith('s'))  return parseFloat(v) * 1000;
   return parseFloat(v) || 700;
 }
-
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
 function parseSummoners(){
   const lines = (summonersInput.value || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
   return lines;
 }
-
-function generateAutoSummoners(n){
-  return Array.from({length:n}, (_,i) => `Invocador ${i+1}`);
-}
+function generateAutoSummoners(n){ return Array.from({length:n}, (_,i) => `Invocador ${i+1}`); }
 
 // ========= Data Dragon =========
 async function loadDataDragon(){
   try{
-    // 1) versión más reciente
     const verRes = await fetch('https://ddragon.leagueoflegends.com/api/versions.json', { cache: 'force-cache' });
     const versions = await verRes.json();
     ddragon.version = versions[0];
 
-    // 2) campeones en español
     const champsRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddragon.version}/data/${ddragon.lang}/champion.json`, { cache:'force-cache' });
     const champData = await champsRes.json();
 
     ddragon.champs = Object.values(champData.data).map(c => ({
-      id: c.id,
-      key: c.key,
-      name: c.name,
-      imageFull: c.image.full
+      id: c.id, key: c.key, name: c.name, imageFull: c.image.full
     }));
   }catch(err){
-    console.error('Error cargando Data Dragon:', err);
-    // Fallback básico por si hay problema de red
+    console.error('Error Data Dragon:', err);
     ddragon.version = ddragon.version || '14.18.1';
     ddragon.champs = ddragon.champs.length ? ddragon.champs : [
       { id:'Aatrox', key:'266', name:'Aatrox', imageFull:'Aatrox.png' },
@@ -78,7 +67,6 @@ async function loadDataDragon(){
     ];
   }
 }
-
 function champImgURL(imageFull){
   return `https://ddragon.leagueoflegends.com/cdn/${ddragon.version}/img/champion/${imageFull}`;
 }
@@ -105,7 +93,6 @@ function playLeverOnce(){
     }, half);
   });
 }
-
 function toggleInputs(lock){
   const dis = !!lock;
   if (btnSpin)  btnSpin.disabled  = dis;
@@ -118,47 +105,40 @@ function getNextSummoner(indexForTeam = null, usedSet = null){
   const allowRepeat = reuseNamesChk?.checked ?? true;
   const names = parseSummoners();
   if (names.length === 0){
-    // si no hay lista, autogeneramos
     return indexForTeam != null ? `Invocador ${indexForTeam+1}` : 'Invocador 1';
   }
   if (allowRepeat){
     return pick(names);
   }
-  // sin repetición
   const pool = names.filter(n => !usedSet?.has(n));
-  if (pool.length === 0) return pick(names); // si se agotaron, permitimos repetir
+  if (pool.length === 0) return pick(names);
   return pick(pool);
 }
-
 function randomRole(slotIndex = null){
   if (slotIndex != null && slotIndex >=0 && slotIndex < ROLES.length){
-    // Cuando armamos equipo, asignamos roles clásicos por índice
     return ROLES[slotIndex];
   }
   return pick(ROLES);
 }
-
 function randomChampion(){
   return pick(ddragon.champs);
 }
 
-function updateResultUI({summoner, role, champ}){
+// ======= UI dentro de la máquina =======
+function updateOverlay({summoner, role, champ}){
   resSummEl.textContent = summoner;
   resRoleEl.textContent = role;
   resChampEl.textContent = champ.name;
   champImgEl.src = champImgURL(champ.imageFull);
   champImgEl.alt = champ.name;
 }
-
 function pushTeamItem({summoner, role, champ}){
   const li = document.createElement('li');
   const img = document.createElement('img');
   img.src = champImgURL(champ.imageFull);
   img.alt = champ.name;
-
   const text = document.createElement('span');
   text.textContent = `${summoner} – ${role} – ${champ.name}`;
-
   li.appendChild(img);
   li.appendChild(text);
   teamList.appendChild(li);
@@ -171,18 +151,15 @@ async function handleSpin(mode){
   toggleInputs(true);
 
   if (mode === 'team'){
-    teamList.innerHTML = ''; // limpiar antes de armar equipo
+    teamList.innerHTML = '';
     const used = new Set();
-    // para equipo, haremos 5 tiradas con roles fijos
     for (let i=0; i<5; i++){
       await playLeverOnce();
       const summoner = getNextSummoner(i, used);
       used.add(summoner);
-
       const role = randomRole(i);
       const champ = randomChampion();
-
-      updateResultUI({summoner, role, champ});
+      updateOverlay({summoner, role, champ});
       pushTeamItem({summoner, role, champ});
     }
   } else {
@@ -190,7 +167,7 @@ async function handleSpin(mode){
     const summoner = getNextSummoner();
     const role = randomRole();
     const champ = randomChampion();
-    updateResultUI({summoner, role, champ});
+    updateOverlay({summoner, role, champ});
   }
 
   toggleInputs(false);
@@ -203,6 +180,7 @@ btnSpin?.addEventListener('click', () => handleSpin('once'));
 btnTeam?.addEventListener('click', () => handleSpin('team'));
 btnReset?.addEventListener('click', () => machine.classList.remove('pulling','releasing'));
 
+// Copiar/Limpiar equipo
 btnCopyTeam?.addEventListener('click', async () => {
   const lines = [...teamList.querySelectorAll('li')].map(li => li.textContent.trim());
   const text = lines.join('\n');
@@ -211,25 +189,17 @@ btnCopyTeam?.addEventListener('click', async () => {
     btnCopyTeam.textContent = '¡Copiado!';
     setTimeout(() => btnCopyTeam.textContent = 'Copiar equipo', 1200);
   }catch{
-    // fallback
     alert(text);
   }
 });
 btnClearTeam?.addEventListener('click', () => teamList.innerHTML = '');
 
-// Atajos de teclado
-window.addEventListener('keydown', (e) => {
-  if (e.key.toLowerCase() === 'r') handleSpin('once');
-  if (e.key.toLowerCase() === 'e') handleSpin('team');
-  if (e.key === 'Escape') machine.classList.remove('pulling','releasing');
-});
-
 // ========= Boot =========
 (async function init(){
   await loadDataDragon();
-  // estado inicial UI
   champImgEl.src = '';
   resSummEl.textContent = '—';
   resRoleEl.textContent = '—';
   resChampEl.textContent = '—';
 })();
+

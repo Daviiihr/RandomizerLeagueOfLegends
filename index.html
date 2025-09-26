@@ -15,8 +15,19 @@
         <img class="layer lever" src="img/Palanca.png" alt="Palanca" />
         <img class="layer knob"  src="img/Pelota.png"  alt="Pelota de la palanca" />
 
+        <!-- Overlay de RESULTADO dentro de la máquina -->
+        <div class="overlay" id="overlay">
+          <img id="champImg" src="" alt="Campeón" />
+          <div class="overlay-info">
+            <div class="line"><b>Invocador:</b> <span id="resSummoner">—</span></div>
+            <div class="line"><b>Rol:</b> <span id="resRole">—</span></div>
+            <div class="line"><b>Campeón:</b> <span id="resChamp">—</span></div>
+          </div>
+        </div>
+
+        <!-- Zona clickeable de la palanca -->
         <button class="hit-area" id="hit" aria-label="Tirar de la palanca" title="Tira de la palanca"></button>
-        <div class="tip">Click o tecla <b>R</b> para tirar</div>
+        <div class="tip">Haz clic para tirar</div>
       </div>
 
       <div class="btns">
@@ -26,11 +37,11 @@
       </div>
     </section>
 
-    <!-- DERECHA: Panel de control / resultados -->
+    <!-- DERECHA: Config y Equipo -->
     <section class="right">
       <div class="card">
         <h2>Lista de invocadores</h2>
-        <p class="muted">Escribe uno por línea. Si está vacío, se autogeneran (<em>Invocador 1…</em>).</p>
+        <p class="muted">Uno por línea. Si está vacío, se autogeneran (<em>Invocador 1…</em>).</p>
         <textarea id="summonersInput" rows="8" placeholder="Ejemplo:
 David
 AatroxMain
@@ -41,18 +52,6 @@ Luxito"></textarea>
             <span></span>
           </label>
           <span>Permitir repetir invocadores</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Resultado actual</h2>
-        <div class="result">
-          <img id="champImg" src="" alt="Campeón" />
-          <div class="result-info">
-            <div><b>Invocador:</b> <span id="resSummoner">—</span></div>
-            <div><b>Rol:</b> <span id="resRole">—</span></div>
-            <div><b>Campeón:</b> <span id="resChamp">—</span></div>
-          </div>
         </div>
       </div>
 

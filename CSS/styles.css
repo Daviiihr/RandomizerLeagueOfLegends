@@ -1,6 +1,6 @@
 :root{
   /* Máquina */
-  --size: min(90vw, 720px);
+  --size: min(90vw, 850px);
   --pivot-x: 82%;
   --pivot-y: 63%;
   --pull-angle: 62deg; /* giro hacia ABAJO */
@@ -11,8 +11,8 @@
   --card: #0f1d34;
   --ink: #e8edf7;
   --muted: #a7b3c9;
-  --accent: #ff8c00; /* naranja */
-  --accent2: #2c6bff; /* azul */
+  --accent: #ff8c00;   /* naranja */
+  --accent2: #2c6bff;  /* azul */
   --border: #1e2a44;
   --radius: 14px;
 }
@@ -45,21 +45,46 @@ body{
   width: var(--size);
   aspect-ratio: 1 / 1;
   user-select: none;
-  max-width: 720px;
+  max-width: 850px;
 }
 .layer{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-.base  { z-index: 1; }
-.lever { z-index: 2; transform-origin: var(--pivot-x) var(--pivot-y); }
-.knob  { z-index: 3; transform-origin: var(--pivot-x) var(--pivot-y); }
+.base  { z-index:40; }
+.lever { z-index:88; transform-origin: var(--pivot-x) var(--pivot-y); }
+.knob  { z-index:90; transform-origin: var(--pivot-x) var(--pivot-y); }
+
+/* Overlay de resultado DENTRO de la máquina */
+.overlay{
+  position:absolute;
+  z-index: 20;
+  /* Ajusta estas posiciones para calzar con tu “ventana” de rodillos */
+  left: 18%; right: 18%; top: 32%; bottom: 38%;
+  display:flex; align-items:center; gap:.9rem;
+  background: rgba(9,19,38,.55);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: .6rem .8rem;
+  backdrop-filter: blur(4px);
+}
+.overlay img{
+  width:72px; height:72px; object-fit:cover; border-radius:.6rem;
+  border:1px solid var(--border); background:#091326;
+}
+.overlay-info{ display:flex; flex-direction:column; gap:.25rem; }
+.overlay-info b{ color:#cfe1ff; }
+.line{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Área clickeable de la palanca */
 .hit-area{
   position:absolute; right:0; top:0; bottom:0; width:34%;
-  background:transparent; border:0; cursor:pointer; z-index:4;
+  background:transparent; border:0; cursor:pointer; z-index:95;
 }
+
 .tip{
-  position:absolute; right:10px; bottom:10px; z-index:5;
+  position:absolute; right:10px; bottom:10px; z-index:70;
   background:rgba(0,0,0,.35); padding:.5rem .7rem; border-radius:.6rem; font-size:.9rem;
   backdrop-filter: blur(4px);
 }
+
 /* Animaciones */
 .machine.pulling .lever,
 .machine.pulling .knob{ animation: lever-down var(--duration) ease-in forwards; }
@@ -113,20 +138,12 @@ textarea{
   position:absolute; inset:0; background:#113; border:1px solid var(--border); border-radius:999px;
 }
 .switch span::after{
-  content:\"\"; position:absolute; width:20px; height:20px; border-radius:50%;
+  content:""; position:absolute; width:20px; height:20px; border-radius:50%;
   background:white; top:50%; left:4px; transform: translateY(-50%);
   transition:.2s;
 }
 .switch input:checked + span{ background:#173; }
 .switch input:checked + span::after{ left:22px; }
-
-/* Resultado */
-.result{ display:flex; gap:.8rem; align-items:center; }
-.result img{
-  width:72px; height:72px; object-fit:cover; border-radius:.6rem; border:1px solid var(--border);
-  background:#091326;
-}
-.result-info b{ color:#cfe1ff; }
 
 /* Equipo */
 .team-list{
@@ -145,4 +162,3 @@ textarea{
   background:transparent; color:#cfe1ff; border:1px solid var(--border); border-radius:.6rem;
   padding:.5rem .8rem; cursor:pointer;
 }
-
