@@ -1,70 +1,108 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LOL Machine – Randomizer</title>
-  <link rel="stylesheet" href="CSS/styles.css">
+  <title>LOL GAMBLING MACHINE</title>
+  <link rel="stylesheet" href="CSS/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Tipografías muy similares a la referencia -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main class="layout">
-    <!-- IZQUIERDA: Máquina -->
-    <section class="left">
-      <div class="machine" id="machine" aria-label="LOL Machine">
-        <img class="layer base"  src="img/Maquina.png" alt="LOL Machine" />
-        <img class="layer lever" src="img/Palanca.png" alt="Palanca" />
-        <img class="layer knob"  src="img/Pelota.png"  alt="Pelota de la palanca" />
+  <header class="top">
+    <h1><span class="brand">LOL</span> <span class="title">GAMBLING MACHINE</span></h1>
+  </header>
 
-        <!-- Overlay de RESULTADO dentro de la máquina -->
-        <div class="overlay" id="overlay">
-          <img id="champImg" src="" alt="Campeón" />
-          <div class="overlay-info">
-            <div class="line"><b>Invocador:</b> <span id="resSummoner">—</span></div>
-            <div class="line"><b>Rol:</b> <span id="resRole">—</span></div>
-            <div class="line"><b>Campeón:</b> <span id="resChamp">—</span></div>
-          </div>
+  <main class="stage">
+    <!-- Columna izquierda -->
+    <aside class="left-col">
+      <section class="card input-card">
+        <h2>Invocadores</h2>
+        <div class="textbox-wrap">
+          <input id="invInput1" class="inv-input" type="text" placeholder="Escribe 5 invocadores, uno por línea" />
         </div>
 
-        <!-- Zona clickeable de la palanca -->
-        <button class="hit-area" id="hit" aria-label="Tirar de la palanca" title="Tira de la palanca"></button>
-        <div class="tip">Haz clic para tirar</div>
-      </div>
+        <!-- ejemplo de ítem (se rellena con roster igual que abajo si guardas) -->
+        <ul class="mini-list" id="miniList">
+          <!-- se completa desde JS si quieres mostrar “guardados” aquí también -->
+        </ul>
+      </section>
 
-      <div class="btns">
-        <button id="btnSpin">Girar</button>
-        <button id="btnTeam">Equipo ×5</button>
-        <button id="btnReset">Reset</button>
-      </div>
-    </section>
-
-    <!-- DERECHA: Config y Equipo -->
-    <section class="right">
-      <div class="card">
-        <h2>Lista de invocadores</h2>
-        <p class="muted">Uno por línea. Si está vacío, se autogeneran (<em>Invocador 1…</em>).</p>
-        <textarea id="summonersInput" rows="8" placeholder="Ejemplo:
-David
-AatroxMain
-Luxito"></textarea>
-        <div class="row gap">
-          <label class="switch">
-            <input id="reuseNames" type="checkbox" checked>
-            <span></span>
-          </label>
-          <span>Permitir repetir invocadores</span>
-        </div>
-      </div>
-
-      <div class="card">
+      <section class="card team-card">
         <h2>Equipo formado</h2>
-        <ol id="teamList" class="team-list"></ol>
-        <div class="row gap wrap">
-          <button id="btnCopyTeam" class="ghost">Copiar equipo</button>
-          <button id="btnClearTeam" class="ghost">Limpiar equipo</button>
+        <ul id="teamList" class="roster"></ul>
+        <div class="actions">
+          <button id="clearSide" class="btn btn-secondary">Limpiar</button>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Máquina -->
+    <section class="machine">
+      <div class="machine-shell">
+        <div class="machine-head">
+          <div class="marquee">LOL MACHINE</div>
+        </div>
+
+        <div class="machine-body">
+          <div class="slots">
+            <!-- Slot 1 -->
+            <article class="slot">
+              <header class="slot-head">Invocador</header>
+              <div class="slot-face">
+                <div class="slot-avatar">
+                  <img id="avatarName" alt="" />
+                </div>
+                <div class="slot-name" id="nameValue">Doinb</div>
+              </div>
+            </article>
+
+            <!-- Slot 2 -->
+            <article class="slot">
+              <header class="slot-head">Rol</header>
+              <div class="slot-face">
+                <div class="slot-avatar round">
+                  <div id="roleBadge" class="role-badge">JUGGLER</div>
+                </div>
+                <div class="slot-name" id="roleValue">Jungla</div>
+              </div>
+            </article>
+
+            <!-- Slot 3 -->
+            <article class="slot">
+              <header class="slot-head">Campeón</header>
+              <div class="slot-face">
+                <div class="slot-avatar">
+                  <img id="champImg" alt="" />
+                </div>
+                <div class="slot-name up" id="champName">LEE SIN</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="button-row">
+            <button id="resetBtn"  class="btn btn-pill">Reset</button>
+            <button id="saveBtn"   class="btn btn-pill">Guardar</button>
+            <button id="teamBtn"   class="btn btn-pill">Equipo</button>
+          </div>
+
+          <div class="cash-slot">CASH SLOT</div>
         </div>
       </div>
+
+      <!-- Palanca -->
+      <button id="lever" class="lever" aria-label="Tirar palanca">
+        <span class="stick"></span>
+        <span class="knob"></span>
+      </button>
     </section>
   </main>
+
+  <footer class="footnote">
+    <small>Data Dragon por ddragons. Proyecto fan no oficial.</small>
+  </footer>
 
   <script src="JS/main.js"></script>
 </body>
