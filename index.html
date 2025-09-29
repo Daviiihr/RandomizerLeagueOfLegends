@@ -21,13 +21,13 @@
       <section class="card input-card">
         <h2>Invocadores</h2>
         <div class="textbox-wrap">
-          <input id="invInput1" class="inv-input" type="text" placeholder="Escribe 5 invocadores, uno por línea" />
+          <!-- ACEPTA 1..5, UNO POR LÍNEA -->
+          <textarea id="summonerInput" class="inv-textarea" rows="6"
+            placeholder="Ingresa 1 a 5 invocadores, uno por línea&#10;Ej:&#10;Faker&#10;Deft&#10;Chovy&#10;Scout&#10;ShowMaker"></textarea>
         </div>
-
-        <!-- ejemplo de ítem (se rellena con roster igual que abajo si guardas) -->
-        <ul class="mini-list" id="miniList">
-          <!-- se completa desde JS si quieres mostrar “guardados” aquí también -->
-        </ul>
+        <div class="inv-hint">
+          <span id="invCount">0</span>/5 nombres (admite 1 a 5)
+        </div>
       </section>
 
       <section class="card team-card">

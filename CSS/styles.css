@@ -37,7 +37,7 @@
   --shadow-2: 0 10px 24px rgba(0,0,0,.26);
 
   --radius-outer:28px;
-  --radius-card:18px;
+  --radius-card:22px;
 
   /* Layout base de la referencia (aprox 1280×900) */
   --stage-max:1280px;
@@ -90,7 +90,7 @@ body::before{
 .card{
   background: linear-gradient(180deg, #0f213c, #0e1e36);
   border:1px solid #1c3a63;
-  border-radius:22px;
+  border-radius:var(--radius-card);
   box-shadow: var(--shadow-2), 0 0 0 1px rgba(0,0,0,.15) inset;
   padding:16px;
   position:relative;
@@ -103,27 +103,65 @@ body::before{
 .card h2{
   margin:0 0 12px; font-size:18px; color:#eef3ff; letter-spacing:.02em; font-weight:800;
 }
+
 .textbox-wrap{
   background:#0c1b33; border:1px solid #294a7c; border-radius:14px;
   box-shadow: inset 0 2px 10px rgba(0,0,0,.25);
   padding:10px;
 }
-.inv-input{
-  width:100%; height:38px; border:none; outline:none;
-  background:transparent; color:#dfe7ff; font-size:14px;
+.inv-textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#dfe7ff;
+  font-size:14px;
+  resize:vertical;
+  min-height:120px; /* cómodo para ver 5 líneas */
+  line-height:1.4;
 }
-.mini-list{ list-style:none; padding:0; margin:12px 0 0; display:flex; flex-direction:column; gap:10px; }
+
+/* Contador e indicadores */
+.inv-hint{
+  margin-top:8px;
+  font-size:12.5px;
+  color:#a9c3ff;
+  opacity:.9;
+}
+.textbox-wrap.valid{
+  border-color:#2d8a3a;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.25), 0 0 0 2px rgba(45,138,58,.25);
+}
+.textbox-wrap.invalid{
+  border-color:#b23c3c;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.25), 0 0 0 2px rgba(178,60,60,.2);
+}
+
+/* Team card con altura fija exacta para 5 ítems */
+.team-card{
+  height: 510px;          /* calculado para 5 items con gaps */
+  display: flex;
+  flex-direction: column;
+}
 
 /* Roster bonito */
 .roster{
-  list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;
-  max-height:320px; overflow:auto;
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  height:100%;        /* ocupa toda la card */
+  overflow: hidden;   /* sin scroll */
 }
 .roster-item{
   display:flex; align-items:center; gap:12px;
   background:linear-gradient(180deg,#0f2038,#0d1a2e);
-  border:1px solid #1f3e6f; border-radius:14px;
-  padding:10px; box-shadow:0 6px 16px rgba(0,0,0,.25);
+  border:1px solid #1f3e6f;
+  border-radius:14px;
+  padding:10px;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
 .roster-item .avatar{
   width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid #2d4e86;
@@ -159,10 +197,7 @@ body::before{
   box-shadow: var(--shadow-1), 0 0 0 6px rgba(26,56,100,.35);
   padding: 10px 10px 16px;
 }
-
-.machine-head{
-  padding:14px 18px 6px;
-}
+.machine-head{ padding:14px 18px 6px; }
 .marquee{
   font-family:'Nunito', system-ui; font-weight:900; font-size:26px; letter-spacing:.05em;
   color:#192642;
@@ -190,7 +225,6 @@ body::before{
   grid-template-columns: repeat(3, 1fr);
   gap:18px;
 }
-
 .slot{
   background: linear-gradient(180deg,#0f2038,#0d1a2e);
   border-radius:16px;
@@ -199,7 +233,7 @@ body::before{
   box-shadow: inset 0 6px 14px rgba(0,0,0,.35);
   position:relative;
 }
-.slot::after{ /* bisel dorado sutil */
+.slot::after{
   content:""; position:absolute; inset:-8px;
   border:6px solid #0e2038; border-radius:22px;
 }
@@ -227,6 +261,7 @@ body::before{
 }
 .slot-name.up{ text-transform:uppercase; }
 
+/* Role badge */
 .role-badge{
   width:66px; height:66px; border-radius:50%;
   display:grid; place-items:center;
@@ -237,12 +272,9 @@ body::before{
   box-shadow: inset 0 -8px 0 rgba(0,0,0,.25), 0 10px 18px rgba(0,0,0,.45);
 }
 
-.button-row{
-  display:flex; justify-content:center; gap:16px; margin:16px 0 12px;
-}
-.btn{
-  font-weight:900; cursor:pointer; text-transform:none; letter-spacing:.02em;
-}
+/* Botones */
+.button-row{ display:flex; justify-content:center; gap:16px; margin:16px 0 12px; }
+.btn{ font-weight:900; cursor:pointer; text-transform:none; letter-spacing:.02em; }
 .btn-pill{
   padding:12px 24px;
   color:var(--btn-green-text);
@@ -261,7 +293,7 @@ body::before{
   border:2px solid #263e6b;
 }
 
-/* ===== Palanca (animación) ===== */
+/* ===== Palanca (solo baja la bola; palo estático) ===== */
 .lever{
   position:absolute; right:-40px; top:48px;
   width:70px; height:220px; background:transparent; border:none; padding:0; cursor:pointer;
@@ -281,16 +313,15 @@ body::before{
   transition: transform .25s cubic-bezier(.2,.7,.2,1);
 }
 .lever.pulled .knob{ transform: translate(-50%, 110px); }
-.lever.pulled .stick{ transform: translateX(-50%) rotate(18deg); }
+.lever.pulled .stick{ transform: translateX(-50%); } /* SIN rotación */
 
-/* ===== Spin animation en los slots ===== */
-.spin{ animation: spin 0.8s linear infinite; }
-@keyframes spin{ 0%{ transform:translateY(0)} 100%{ transform:translateY(-10px)} }
+/* ===== Slots sin animación de “línea” ===== */
+.spin{ animation: none; } /* desactivada */
 
 /* ===== Footer ===== */
 .footnote{ text-align:center; padding:18px; color:#94a7da; opacity:.9; }
 
-/* ===== Responsive (manteniendo proporciones) ===== */
+/* ===== Responsive ===== */
 @media (max-width: 1200px){
   .stage{ grid-template-columns:1fr; }
   .lever{ right:6px; top:-6px; }
